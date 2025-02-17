@@ -3,6 +3,8 @@ import 'package:food_app/app_colors.dart';
 import 'package:food_app/pages/main_food_page.dart';
 import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/container_and_icon.dart';
+import 'package:food_app/widgets/icon_and_text.dart';
+import 'package:food_app/widgets/small_text.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -59,6 +61,82 @@ class _CartPageState extends State<CartPage> {
                 )
               ],
             ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: 10,
+                shrinkWrap: true,
+                itemBuilder: (contxet, index) {
+                  return Container(
+                    margin: EdgeInsets.all(10),
+                    height: 120,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.asset(
+                            'images/GREENFOOD.jpg',
+                            width: 130,
+                            height: 130,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                                  BigText(text: 'Nutritious Fruit meal......'),
+                            ),
+                            SmallText(
+                              text: 'Food',
+                              color: Colors.black54,
+                            ),
+                            Row(
+                              children: [
+                                BigText(
+                                  text: '\$ 33.0',
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(Icons.remove),
+                                      BigText(text: '0'),
+                                      Icon(Icons.add)
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                }),
           )
         ],
       ),
