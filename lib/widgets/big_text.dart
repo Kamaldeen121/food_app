@@ -23,6 +23,8 @@ class BigText extends StatelessWidget {
     return Text(
       text,
       overflow: textOverflow,
+      maxLines: 1,
+      softWrap: true,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,

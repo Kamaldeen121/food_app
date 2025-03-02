@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/Controllers/recommended_controller.dart';
 import 'package:food_app/app_colors.dart';
+import 'package:food_app/models/product_model.dart';
 import 'package:food_app/pages/cart_page.dart';
-import 'package:food_app/pages/main_food_page.dart';
 import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/container_and_icon.dart';
 import 'package:food_app/widgets/icon_and_text.dart';
 import 'package:food_app/widgets/small_text.dart';
+import 'package:provider/provider.dart';
+import 'package:food_app/Controllers/popular_controller.dart';
 
 class MainfoodDetailPage extends StatefulWidget {
-  const MainfoodDetailPage({super.key});
+  final Products product;
+  const MainfoodDetailPage({
+    super.key,
+    required this.product,
+  });
 
   @override
-  _MainfoodDetailPageState createState() => _MainfoodDetailPageState();
+  MainfoodDetailPageState createState() => MainfoodDetailPageState();
 }
 
-class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
+class MainfoodDetailPageState extends State<MainfoodDetailPage> {
   bool isExpanded = false;
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Stack(
             children: [
-              Image.asset(
-                'images/yellow-food.jpg',
+              Image.network(
+                'https://mvs.bslmeiyu.com' '/uploads/${widget.product.img!}',
                 width: double.maxFinite,
-                height: MediaQuery.sizeOf(context).height / 2,
+                height: MediaQuery.sizeOf(context).height / 2.5,
                 fit: BoxFit.cover,
               ),
               Padding(
@@ -37,10 +46,7 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainFoodPage()));
+                        Navigator.pop(context);
                       },
                       child: ContainerAndIcon(
                         icon: Icons.arrow_back_ios_outlined,
@@ -58,11 +64,11 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
                 ),
               ),
               Positioned(
-                bottom: -40, // Adjust the bottom position as needed
+                bottom: -20, // Adjust the bottom position as needed
                 left: MediaQuery.of(context).size.width / 2 -
                     240, // Center the container
                 child: Container(
-                  height: 150,
+                  height: 60,
                   width: 480,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -75,68 +81,7 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BigText(text: 'Biriani'),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            ...List.generate(5, (index) {
-                              return Icon(
-                                Icons.star,
-                                color: AppColors.mainColor,
-                                size: 15,
-                              );
-                            }),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SmallText(
-                              text: '4.5',
-                              fontSize: 8,
-                              fontWeight: FontWeight.w200,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SmallText(
-                              text: '1927',
-                              fontSize: 8,
-                              fontWeight: FontWeight.w200,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SmallText(
-                              text: 'Biriani',
-                              fontSize: 8,
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconandText(
-                              icon: Icons.help_rounded,
-                              text: 'moreeee',
-                              iconColor: AppColors.yellowColor,
-                            ),
-                            IconandText(
-                              icon: Icons.location_on,
-                              text: 'Place',
-                              iconColor: AppColors.mainColor,
-                            ),
-                            IconandText(
-                              icon: Icons.access_time_sharp,
-                              text: 'Time',
-                              iconColor: AppColors.iconColor1,
-                            ),
-                          ],
-                        )
+                        Center(child: BigText(text: widget.product.name!)),
                       ],
                     ),
                   ),
@@ -144,24 +89,22 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
               ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.only(topLeft: Radius.circular(20))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BigText(text: 'Introduce'),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     SmallText(
-                      text:
-                          'Biryani (/bɜːrˈjɑːni/) is a mixed rice dish popular in South Asia, made with rice, meat (chicken, goat, lamb, beef) or seafood (prawns or fish), and spices. To cater to vegetarians, the meat or seafood can be substituted with vegetables or paneer.[1] Sometimes eggs or potatoes are also added.[2] Biryani is one of the most popular dishes among the South Asian diaspora, although the dish is often associated with the regions Muslim population in particular.[3] Similar dishes are also prepared in Iran, Iraq, Myanmar, Thailand, and Malaysia.[4] Biryani is the single most-ordered dish on Indian online food ordering and delivery services, and has been labelled as the most popular dish overall in India.[5][6]',
+                      text: widget.product.description!,
                       textOverflow: TextOverflow.visible,
                       maxLines: isExpanded ? null : 4,
                     ),
@@ -185,6 +128,40 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
                               : Icons.arrow_drop_down_sharp)
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 200,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.mainColor,
+                          child: IconButton(
+                            icon: Icon(Icons.remove, color: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                if (quantity > 1) {
+                                  quantity--;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        BigText(text: '\$${widget.product.price} X $quantity'),
+                        CircleAvatar(
+                          backgroundColor: AppColors.mainColor,
+                          child: IconButton(
+                            icon: Icon(Icons.add, color: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                quantity++;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
@@ -205,36 +182,64 @@ class _MainfoodDetailPageState extends State<MainfoodDetailPage> {
           children: [
             Container(
               height: 50,
-              width: 100,
+              width: 120,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(15)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Icon(Icons.remove),
-                  BigText(text: '0'),
-                  Icon(Icons.add)
+                  IconButton(
+                      onPressed: () {
+                        if (quantity > 1) {
+                          quantity--;
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(Icons.remove)),
+                  BigText(text: '$quantity'),
+                  IconButton(
+                    icon: Icon(
+                      Icons.add,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        quantity++;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
-            Container(
-              height: 60,
-              width: 170,
-              decoration: BoxDecoration(
-                  color: AppColors.mainColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BigText(
-                    text: '\$12.0',
-                    color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Provider.of<PopularController>(context, listen: false)
+                    .addToCart(widget.product, quantity);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartPage(),
                   ),
-                  SmallText(
-                    text: 'Add to cart',
-                    color: Colors.white,
-                  )
-                ],
+                );
+              },
+              child: Container(
+                height: 60,
+                width: 170,
+                decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BigText(
+                      text: '\$${widget.product.price! * quantity}',
+                      color: Colors.white,
+                    ),
+                    SmallText(
+                      text: 'Add to cart',
+                      color: Colors.white,
+                    )
+                  ],
+                ),
               ),
             )
           ],

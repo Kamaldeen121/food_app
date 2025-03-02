@@ -27,6 +27,8 @@ class IconandText extends StatelessWidget {
           text: text,
           fontWeight: FontWeight.w300,
           fontSize: 10,
+          textOverflow: TextOverflow.ellipsis,
+          maxLines: 1,
         )
       ],
     );

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/app_colors.dart';
+import 'package:food_app/models/product_model.dart';
+import 'package:food_app/pages/bottom_navbar_page.dart';
+import 'package:food_app/pages/cart_history_page.dart';
 import 'package:food_app/pages/main_food_page.dart';
 import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/container_and_icon.dart';
 import 'package:food_app/widgets/icon_and_text.dart';
 import 'package:food_app/widgets/small_text.dart';
+import 'package:provider/provider.dart';
+import 'package:food_app/Controllers/popular_controller.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -16,6 +21,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<PopularController>(context);
     return Scaffold(
       body: Column(
         children: [
@@ -41,7 +47,7 @@ class _CartPageState extends State<CartPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MainFoodPage()));
+                                builder: (context) => BottomNavbarPage()));
                       },
                       child: ContainerAndIcon(
                         icon: Icons.home,
@@ -67,9 +73,11 @@ class _CartPageState extends State<CartPage> {
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: 10,
+                itemCount: cartProvider.cartCount,
                 shrinkWrap: true,
-                itemBuilder: (contxet, index) {
+                itemBuilder: (context, index) {
+                  final cartItem = cartProvider.cartItems[index];
+                  final product = cartItem.product;
                   return Container(
                     margin: EdgeInsets.all(10),
                     height: 120,
@@ -81,8 +89,9 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            'images/GREENFOOD.jpg',
+                          child: Image.network(
+                            'https://mvs.bslmeiyu.com'
+                            '/uploads/${product.img!}',
                             width: 130,
                             height: 130,
                             fit: BoxFit.cover,
@@ -97,17 +106,18 @@ class _CartPageState extends State<CartPage> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  BigText(text: 'Nutritious Fruit meal......'),
+                              child: SizedBox(
+                                  width: 200,
+                                  child: BigText(text: product.name!)),
                             ),
                             SmallText(
-                              text: 'Food',
+                              text: product.location!,
                               color: Colors.black54,
                             ),
                             Row(
                               children: [
                                 BigText(
-                                  text: '\$ 33.0',
+                                  text: '\$${product.price}',
                                   color: Colors.red,
                                 ),
                                 SizedBox(
@@ -124,7 +134,7 @@ class _CartPageState extends State<CartPage> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Icon(Icons.remove),
-                                      BigText(text: '0'),
+                                      BigText(text: '${cartItem.quantity}'),
                                       Icon(Icons.add)
                                     ],
                                   ),
@@ -139,6 +149,57 @@ class _CartPageState extends State<CartPage> {
                 }),
           )
         ],
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(20),
+        height: 120,
+        width: 200,
+        decoration: BoxDecoration(
+            color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
+              child: Icon(
+                Icons.favorite,
+                color: AppColors.mainColor,
+                size: 30,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                cartProvider.moveToCartHistory();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartHistoryPage(),
+                  ),
+                );
+              },
+              child: Container(
+                height: 60,
+                width: 170,
+                decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SmallText(
+                      text: 'Checkout',
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

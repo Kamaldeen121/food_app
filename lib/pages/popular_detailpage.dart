@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/app_colors.dart';
+import 'package:food_app/models/product_model.dart';
 import 'package:food_app/pages/cart_page.dart';
-import 'package:food_app/pages/main_food_page.dart';
 import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/container_and_icon.dart';
 import 'package:food_app/widgets/icon_and_text.dart';
 import 'package:food_app/widgets/small_text.dart';
+import 'package:provider/provider.dart';
+import 'package:food_app/Controllers/popular_controller.dart';
 
 class PopularDetailpage extends StatefulWidget {
-  const PopularDetailpage({super.key});
+  final Products product;
+  const PopularDetailpage({
+    super.key,
+    required this.product,
+  });
 
   @override
   MainfoodDetailPageState createState() => MainfoodDetailPageState();
@@ -16,6 +22,7 @@ class PopularDetailpage extends StatefulWidget {
 
 class MainfoodDetailPageState extends State<PopularDetailpage> {
   bool isExpanded = false;
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +32,8 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
         children: [
           Stack(
             children: [
-              Image.asset(
-                'images/PIZZA.jpg',
+              Image.network(
+                'https://mvs.bslmeiyu.com' '/uploads/${widget.product.img!}',
                 width: double.maxFinite,
                 height: MediaQuery.sizeOf(context).height / 2.5,
                 fit: BoxFit.cover,
@@ -38,10 +45,7 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainFoodPage()));
+                        Navigator.pop(context);
                       },
                       child: ContainerAndIcon(
                         icon: Icons.arrow_back_ios_outlined,
@@ -76,7 +80,7 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(child: BigText(text: 'Chinese Slide')),
+                        Center(child: BigText(text: widget.product.name!)),
                       ],
                     ),
                   ),
@@ -99,8 +103,7 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                       height: 10,
                     ),
                     SmallText(
-                      text:
-                          'Biryani (/bɜːrˈjɑːni/) is a mixed rice dish popular in South Asia, made with rice, meat (chicken, goat, lamb, beef) or seafood (prawns or fish), and spices. To cater to vegetarians, the meat or seafood can be substituted with vegetables or paneer.[1] Sometimes eggs or potatoes are also added.[2] Biryani is one of the most popular dishes among the South Asian diaspora, although the dish is often associated with the regions Muslim population in particular.[3] Similar dishes are also prepared in Iran, Iraq, Myanmar, Thailand, and Malaysia.[4] Biryani is the single most-ordered dish on Indian online food ordering and delivery services, and has been labelled as the most popular dish overall in India.[5][6]',
+                      text: widget.product.description!,
                       textOverflow: TextOverflow.visible,
                       maxLines: isExpanded ? null : 4,
                     ),
@@ -134,17 +137,27 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                       children: [
                         CircleAvatar(
                           backgroundColor: AppColors.mainColor,
-                          child: Icon(
-                            Icons.remove,
-                            color: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.remove, color: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                if (quantity > 1) {
+                                  quantity--;
+                                }
+                              });
+                            },
                           ),
                         ),
-                        BigText(text: '\$3456' + 'X' + '5'),
+                        BigText(text: '\$${widget.product.price} X $quantity'),
                         CircleAvatar(
                           backgroundColor: AppColors.mainColor,
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.add, color: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                quantity++;
+                              });
+                            },
                           ),
                         ),
                       ],
@@ -168,36 +181,64 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
           children: [
             Container(
               height: 50,
-              width: 100,
+              width: 120,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(15)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Icon(Icons.remove),
-                  BigText(text: '0'),
-                  Icon(Icons.add)
+                  IconButton(
+                      onPressed: () {
+                        if (quantity > 1) {
+                          quantity--;
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(Icons.remove)),
+                  BigText(text: '$quantity'),
+                  IconButton(
+                    icon: Icon(
+                      Icons.add,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        quantity++;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
-            Container(
-              height: 60,
-              width: 170,
-              decoration: BoxDecoration(
-                  color: AppColors.mainColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BigText(
-                    text: '\$12.0',
-                    color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Provider.of<PopularController>(context, listen: false)
+                    .addToCart(widget.product, quantity);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartPage(),
                   ),
-                  SmallText(
-                    text: 'Add to cart',
-                    color: Colors.white,
-                  )
-                ],
+                );
+              },
+              child: Container(
+                height: 60,
+                width: 170,
+                decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(15)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    BigText(
+                      text: '\$${widget.product.price! * quantity}',
+                      color: Colors.white,
+                    ),
+                    SmallText(
+                      text: 'Add to cart',
+                      color: Colors.white,
+                    )
+                  ],
+                ),
               ),
             )
           ],

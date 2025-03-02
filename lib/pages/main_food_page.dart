@@ -16,6 +16,7 @@ class MainFoodPage extends StatefulWidget {
 class _MainFoodPageState extends State<MainFoodPage> {
   final PageController pageController = PageController(viewportFraction: 0.76);
   double _currentPage = 0.0;
+  int quantity = 1;
 
   @override
   void initState() {
@@ -85,6 +86,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
               height: 10,
             ),
             DotsIndicator(
+              reversed: false,
               dotsCount: 5,
               position: _currentPage,
               decorator: DotsDecorator(
