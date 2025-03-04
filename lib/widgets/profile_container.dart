@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/widgets/big_text.dart';
 
@@ -36,9 +37,12 @@ class ProfileContainer extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 10.r,
             ),
-            BigText(text: text)
+            BigText(
+              text: text,
+              fontSize: 13.r,
+            )
           ],
         ));
   }

@@ -4,10 +4,12 @@ import 'package:food_app/app_colors.dart';
 class CustomTextField extends StatelessWidget {
   final IconData prefixIcon;
   final String hintText;
+  final TextEditingController? controller;
   const CustomTextField({
     super.key,
     required this.prefixIcon,
     required this.hintText,
+    this.controller,
   });
 
   @override
@@ -25,6 +27,7 @@ class CustomTextField extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.2))
             ]),
         child: TextField(
+          controller: controller,
           decoration: InputDecoration(
             hintText: hintText,
             prefixIcon: Icon(

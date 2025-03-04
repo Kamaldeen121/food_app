@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/Controllers/popular_controller.dart';
 import 'package:food_app/Controllers/recommended_controller.dart';
 import 'package:food_app/app_colors.dart';
@@ -22,21 +23,27 @@ class MainFoodView extends StatefulWidget {
 
 class _MainFoodViewState extends State<MainFoodView> {
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    Provider.of<RecommendedController>(context, listen: false)
-        .getRecommendedProducts();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<RecommendedController>(context, listen: false)
+          .getRecommendedProducts();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final recommendedController =
-        Provider.of<RecommendedController>(context, listen: false);
+    final screenSize = MediaQuery.of(context).size;
+
+    print("Screen Width: ${screenSize.width}");
+    print("Screen Height: ${screenSize.height}");
+
+    final recommendedController = Provider.of<RecommendedController>(context);
     return SizedBox(
-      height: 300,
-      width: double.maxFinite,
-      child: recommendedController.isloading == true
+      height: 300.h,
+      width: double.maxFinite.w,
+      child: recommendedController.isLoading == true
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -67,20 +74,22 @@ class _MainFoodViewState extends State<MainFoodView> {
                                       product: recomemdedProduct,
                                     )));
                       },
-                      child: recommendedController.isloading == true
+                      child: recommendedController.isLoading == true
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
                           : Container(
-                              margin: EdgeInsets.only(left: 20, right: 0),
-                              height: 220,
-                              width: 320,
+                              margin: EdgeInsets.only(
+                                left: 10.r,
+                              ),
+                              height: 250.h,
+                              width: double.maxFinite.w,
                               decoration: BoxDecoration(
                                 color: Colors.yellow,
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(30.r),
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(30.r),
                                 child: Image.network(
                                   'https://mvs.bslmeiyu.com'
                                   '/uploads/${recomemdedProduct.img!}',
@@ -94,15 +103,15 @@ class _MainFoodViewState extends State<MainFoodView> {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(20.r),
                           margin: EdgeInsets.only(
-                            left: 27,
+                            left: 10.r,
                           ),
-                          height: 110,
-                          width: 300,
+                          height: 130.h,
+                          width: 250.w,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,27 +128,27 @@ class _MainFoodViewState extends State<MainFoodView> {
                                     );
                                   }),
                                   SizedBox(
-                                    width: 10,
+                                    width: 10.w,
                                   ),
                                   SmallText(
                                     text: '4.5',
-                                    fontSize: 8,
+                                    fontSize: 8.sp,
                                     fontWeight: FontWeight.w200,
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 10.w,
                                   ),
                                   SmallText(
                                     text: '1927',
-                                    fontSize: 8,
+                                    fontSize: 8.sp,
                                     fontWeight: FontWeight.w200,
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 10.w,
                                   ),
                                   SmallText(
                                     text: recomemdedProduct.name.toString(),
-                                    fontSize: 8,
+                                    fontSize: 8.sp,
                                     fontWeight: FontWeight.w200,
                                   ),
                                 ],

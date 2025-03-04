@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/pages/main_food_view.dart';
 import 'package:food_app/pages/popular_food_view.dart';
@@ -39,11 +40,11 @@ class _MainFoodPageState extends State<MainFoodPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Container(
-        padding: EdgeInsets.only(left: 20, right: 20),
+        padding: EdgeInsets.only(left: 10, right: 10),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(left: 10.r, right: 10.r, top: 40.r),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -57,7 +58,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
                         children: [
                           SmallText(
                             text: 'Nagreeb',
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                           Icon(Icons.arrow_drop_down)
                         ],
@@ -65,8 +66,8 @@ class _MainFoodPageState extends State<MainFoodPage> {
                     ],
                   ),
                   Container(
-                    height: 45,
-                    width: 45,
+                    height: 45.h,
+                    width: 45.w,
                     decoration: BoxDecoration(
                         color: AppColors.mainColor,
                         borderRadius: BorderRadius.circular(12)),
@@ -79,7 +80,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 20.h,
             ),
             MainFoodView(pageController: pageController),
             SizedBox(
@@ -98,19 +99,19 @@ class _MainFoodPageState extends State<MainFoodPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 10.h,
             ),
             Container(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(left: 20.r, right: 20.r),
               child: Row(
                 children: [
                   BigText(text: 'Popular'),
                   SizedBox(
-                    width: 10,
+                    width: 10.w,
                   ),
                   SmallText(text: '.'),
                   SizedBox(
-                    width: 10,
+                    width: 10.w,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -123,7 +124,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 10.h,
             ),
             PopularFoodView(),
           ],

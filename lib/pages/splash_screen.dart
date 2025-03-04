@@ -5,6 +5,8 @@ import 'package:food_app/app_colors.dart';
 import 'package:food_app/pages/bottom_navbar_page.dart';
 import 'package:food_app/widgets/big_text.dart';
 
+import 'bottom_navbar_page.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

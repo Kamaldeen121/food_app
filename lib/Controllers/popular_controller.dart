@@ -30,23 +30,25 @@ class PopularController extends ChangeNotifier {
   bool isloading = false;
 
   Future<void> getPopularProducts() async {
+    if (isloading || popularServices == null) return; // Prevent multiple calls
+
     isloading = true;
+    notifyListeners();
 
-    try {
-      final response = await popularServices!.getPopularProducts();
+    final response = await popularServices!.getPopularProducts();
 
-      if (response.statusCode == 200) {
-        final decodedData = response.data;
+    if (response.statusCode == 200) {
+      final decodedData = response.data;
 
-        final product = ProductModel.fromJson(decodedData);
-        productList!.addAll(product.productList!);
-      } else {
-        print('Failed to load products');
-      }
-    } catch (e) {
-      print('Error: $e');
-    } finally {
+      final product = ProductModel.fromJson(decodedData);
+      productList!.addAll(product.productList!);
+
       isloading = false;
+      notifyListeners();
+    } else {
+      print('Failed to load products');
+      isloading = false;
+      notifyListeners();
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/models/product_model.dart';
 import 'package:food_app/pages/bottom_navbar_page.dart';
@@ -26,7 +27,7 @@ class _CartPageState extends State<CartPage> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+            padding: EdgeInsets.only(left: 20.r, right: 20.r, top: 40.r),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,7 +57,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
                     SizedBox(
-                      width: 60,
+                      width: 60.w,
                     ),
                     ContainerAndIcon(
                       icon: Icons.shopping_cart_sharp,
@@ -69,7 +70,7 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 10.h,
           ),
           Expanded(
             child: ListView.builder(
@@ -79,9 +80,9 @@ class _CartPageState extends State<CartPage> {
                   final cartItem = cartProvider.cartItems[index];
                   final product = cartItem.product;
                   return Container(
-                    margin: EdgeInsets.all(10),
-                    height: 120,
-                    width: 250,
+                    margin: EdgeInsets.only(left: 10.r, right: 10.r),
+                    height: 120.h,
+                    width: double.maxFinite,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15)),
@@ -92,22 +93,22 @@ class _CartPageState extends State<CartPage> {
                           child: Image.network(
                             'https://mvs.bslmeiyu.com'
                             '/uploads/${product.img!}',
-                            width: 130,
-                            height: 130,
+                            width: 130.w,
+                            height: 130.h,
                             fit: BoxFit.cover,
                           ),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 10.w,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0).r,
                               child: SizedBox(
-                                  width: 200,
+                                  width: 180.w,
                                   child: BigText(text: product.name!)),
                             ),
                             SmallText(
@@ -121,11 +122,11 @@ class _CartPageState extends State<CartPage> {
                                   color: Colors.red,
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: 10.w,
                                 ),
                                 Container(
-                                  height: 40,
-                                  width: 80,
+                                  height: 40.h,
+                                  width: 80.w,
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15)),
@@ -151,9 +152,9 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(20),
-        height: 120,
-        width: 200,
+        padding: EdgeInsets.all(20).r,
+        height: 120.h,
+        width: 200.w,
         decoration: BoxDecoration(
             color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
         child: Row(
@@ -161,14 +162,15 @@ class _CartPageState extends State<CartPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
-              height: 50,
-              width: 50,
+              height: 50.h,
+              width: 50.w,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r)),
               child: Icon(
                 Icons.favorite,
                 color: AppColors.mainColor,
-                size: 30,
+                size: 30.sp,
               ),
             ),
             GestureDetector(
@@ -182,8 +184,8 @@ class _CartPageState extends State<CartPage> {
                 );
               },
               child: Container(
-                height: 60,
-                width: 170,
+                height: 60.h,
+                width: 170.w,
                 decoration: BoxDecoration(
                     color: AppColors.mainColor,
                     borderRadius: BorderRadius.circular(15)),

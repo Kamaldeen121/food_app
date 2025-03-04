@@ -16,10 +16,14 @@ class RecommendedController extends ChangeNotifier {
   List<Products>? productList = [];
   List<CartItem> cartItems = [];
 
-  bool isloading = false;
+  bool isLoading = false;
 
   Future<void> getRecommendedProducts() async {
-    isloading = true;
+    if (isLoading || recommendedServices == null)
+      return; // Prevent multiple calls
+
+    isLoading = true;
+    notifyListeners();
 
     final response = await recommendedServices!.getRecommendedProducts();
 
@@ -29,10 +33,11 @@ class RecommendedController extends ChangeNotifier {
       final product = ProductModel.fromJson(decodedData);
       productList!.addAll(product.productList!);
 
-      isloading = false;
+      isLoading = false;
+      notifyListeners();
     } else {
       print('Failed to load products');
-      isloading = false;
+      isLoading = false;
       notifyListeners();
     }
   }

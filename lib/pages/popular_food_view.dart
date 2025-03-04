@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/Controllers/popular_controller.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/pages/popular_detailpage.dart';
@@ -18,15 +19,18 @@ class PopularFoodView extends StatefulWidget {
 
 class _PopularFoodViewState extends State<PopularFoodView> {
   @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    Provider.of<PopularController>(context, listen: false).getPopularProducts();
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PopularController>(context, listen: false)
+          .getPopularProducts();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final productController =
-        Provider.of<PopularController>(context, listen: false);
+    final productController = Provider.of<PopularController>(context);
     return Expanded(
       child: productController.isloading == true
           ? Center(
@@ -48,7 +52,7 @@ class _PopularFoodViewState extends State<PopularFoodView> {
                   },
                   child: Container(
                     margin: EdgeInsets.all(10),
-                    height: 150,
+                    height: 150.h,
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -60,26 +64,26 @@ class _PopularFoodViewState extends State<PopularFoodView> {
                           child: Image.network(
                             'https://mvs.bslmeiyu.com'
                             '/uploads/${product.img!}',
-                            width: 130,
-                            height: 130,
+                            width: 130.w,
+                            height: 130.h,
                             fit: BoxFit.cover,
                           ),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 10.w,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: 200,
+                              width: 150.w,
                               child: BigText(
                                 text: product.name!,
                               ),
                             ),
                             SizedBox(
-                              width: 200,
+                              width: 150.w,
                               child: SmallText(
                                 text: product.description.toString(),
                                 maxLines: 2,
@@ -97,15 +101,18 @@ class _PopularFoodViewState extends State<PopularFoodView> {
                                     iconColor: AppColors.yellowColor,
                                   ),
                                   SizedBox(
-                                    width: 10,
-                                  ),
-                                  IconandText(
-                                    icon: Icons.location_on,
-                                    text: product.location.toString(),
-                                    iconColor: AppColors.mainColor,
+                                    width: 10.w,
                                   ),
                                   SizedBox(
-                                    width: 20,
+                                    width: 60.w,
+                                    child: IconandText(
+                                      icon: Icons.location_on,
+                                      text: product.price.toString(),
+                                      iconColor: AppColors.mainColor,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10.w,
                                   ),
                                   IconandText(
                                     icon: Icons.access_time_sharp,
