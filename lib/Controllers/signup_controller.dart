@@ -23,7 +23,7 @@ class SignupController extends ChangeNotifier {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     if (response.statusCode == 200) {
       isRegister = true;
-      responseMessage = response.statusMessage ?? ' Resgister Succesful';
+      responseMessage = 'Register Successful';
       await pref.setBool('isRegister', true);
       await pref.setString('f_name', user.name);
       await pref.setString('phone', user.phone);
@@ -43,7 +43,7 @@ class SignupController extends ChangeNotifier {
       addUser = newUser;
       responseMessage = 'User added successfully';
     } else {
-      responseMessage = 'User not added: ${response.statusMessage}';
+      responseMessage = 'User not added';
     }
 
     isloading = false;
@@ -57,14 +57,34 @@ class SignupController extends ChangeNotifier {
     String? name = pref.getString('f_name');
     String? email = pref.getString('email');
     String? password = pref.getString('password');
+
     if (isRegister &&
-        password != null &&
         phone != null &&
+        name != null &&
         email != null &&
-        name != null) {
+        password != null) {
       addUser = SignupPayload(
-          name: name, phone: phone, email: email, password: password);
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+      );
     }
     notifyListeners();
+  }
+
+  Future<void> fetchUserProfile() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final response = await signupServices.fetchUserProfile();
+
+    if (response.statusCode == 200) {
+      final userData = response.data['user'];
+
+      await pref.setString('f_name', userData['f_name'] ?? '');
+      await pref.setString('email', userData['email'] ?? '');
+      await pref.setString('phone', userData['phone'] ?? '');
+
+      loadUserData(); // Update UI after fetching user data
+    }
   }
 }

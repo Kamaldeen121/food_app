@@ -35,7 +35,8 @@ void main() async {
               signupServices: SignupServices(apiClient: ApiClient()))),
       ChangeNotifierProvider(
           create: (_) => LoginController(
-              signinServices: SigninServices(apiClient: ApiClient()))),
+              signinServices: SigninServices(apiClient: ApiClient()),
+              popularController: PopularController())),
     ],
     child: const MyApp(),
   ));

@@ -5,8 +5,12 @@ class SigninPayload {
   final String password;
   final String name;
   final String email;
-  SigninPayload(this.name, this.email,
-      {required this.phone, required this.password});
+  SigninPayload(
+    this.name,
+    this.email, {
+    required this.phone,
+    required this.password,
+  });
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['phone'] = this.phone;

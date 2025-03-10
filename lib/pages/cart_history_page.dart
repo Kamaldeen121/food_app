@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/Controllers/popular_controller.dart';
 import 'package:food_app/app_colors.dart';
+import 'package:food_app/pages/cart_page.dart';
 import 'package:food_app/pages/emty_cartpage.dart';
 import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/container_and_icon.dart';
@@ -27,10 +28,17 @@ class CartHistoryPageState extends State<CartHistoryPage> {
           actions: [
             Padding(
               padding: const EdgeInsets.all(8).r,
-              child: ContainerAndIcon(
-                icon: Icons.shopping_cart,
-                iconColor: Colors.white,
-                color: Colors.amber,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => CartPage()),
+                  );
+                },
+                child: ContainerAndIcon(
+                  icon: Icons.shopping_cart,
+                  iconColor: Colors.white,
+                  color: Colors.amber,
+                ),
               ),
             )
           ],

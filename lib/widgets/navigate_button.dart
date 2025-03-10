@@ -30,10 +30,12 @@ class NavigateButton extends StatelessWidget {
             color: AppColors.mainColor,
             borderRadius: BorderRadius.circular(30)),
         child: Center(
-            child: BigText(
-          text: navigateText,
-          color: Colors.white,
-          fontSize: 25,
+            child: Container(
+          child: BigText(
+            text: navigateText,
+            color: Colors.white,
+            fontSize: 25,
+          ),
         )),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   final dio = Dio(
@@ -12,12 +13,20 @@ class ApiClient {
 
   ApiClient() {
     dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
+        final token = await _getToken(); // ✅ Get token from SharedPreferences
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
         options.headers['Accept'] = 'application/json';
-        options.headers['Authorization'] = ' ';
         return handler.next(options);
       },
     ));
+  }
+
+  Future<String?> _getToken() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString('token'); // ✅ Retrieve saved token
   }
 
   Future<Response> getData(String endpoint) async {

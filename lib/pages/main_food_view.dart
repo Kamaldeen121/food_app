@@ -1,6 +1,6 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_app/Controllers/popular_controller.dart';
 import 'package:food_app/Controllers/recommended_controller.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/pages/mainfood_detail_page.dart';
@@ -8,12 +8,10 @@ import 'package:food_app/widgets/big_text.dart';
 import 'package:food_app/widgets/icon_and_text.dart';
 import 'package:food_app/widgets/small_text.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MainFoodView extends StatefulWidget {
-  const MainFoodView({
-    super.key,
-    required this.pageController,
-  });
+  const MainFoodView({super.key, required this.pageController});
 
   final PageController pageController;
 
@@ -22,68 +20,60 @@ class MainFoodView extends StatefulWidget {
 }
 
 class _MainFoodViewState extends State<MainFoodView> {
+  double _currentPage = 0.0;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<RecommendedController>(context, listen: false)
           .getRecommendedProducts();
     });
+    widget.pageController.addListener(() {
+      setState(() {
+        _currentPage = widget.pageController.page!;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
-    print("Screen Width: ${screenSize.width}");
-    print("Screen Height: ${screenSize.height}");
-
     final recommendedController = Provider.of<RecommendedController>(context);
-    return SizedBox(
-      height: 300.h,
-      width: double.maxFinite.w,
-      child: recommendedController.isLoading == true
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : PageView.builder(
-              reverse: false,
-              itemCount: recommendedController.productList!.length,
-              controller: widget.pageController,
-              padEnds: false,
-              itemBuilder: (context, index) {
-                final recomemdedProduct =
-                    recommendedController.productList![index];
-                double scale = 2.0;
-                if (widget.pageController.position.haveDimensions) {
-                  scale =
-                      (1 - (widget.pageController.page! - index).abs() * 0.3)
-                          .clamp(0.8, 2.0);
-                }
-                return Transform(
-                  transformHitTests: true,
-                  transform: Matrix4.diagonal3Values(1, 1, 1),
-                  child: Stack(children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainfoodDetailPage(
-                                      product: recomemdedProduct,
-                                    )));
-                      },
-                      child: recommendedController.isLoading == true
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Container(
-                              margin: EdgeInsets.only(
-                                left: 10.r,
-                              ),
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 300.h,
+          width: double.maxFinite,
+          child: recommendedController.isloading
+              ? _buildShimmerEffect() // Show shimmer while loading
+              : PageView.builder(
+                  itemCount: recommendedController.productList!.length,
+                  controller: widget.pageController,
+                  padEnds: false,
+                  itemBuilder: (context, index) {
+                    final recommendedProduct =
+                        recommendedController.productList![index];
+
+                    return Transform(
+                      transformHitTests: true,
+                      transform: Matrix4.diagonal3Values(1, 1, 1),
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainfoodDetailPage(
+                                      product: recommendedProduct),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10.r),
                               height: 250.h,
-                              width: double.maxFinite.w,
+                              width: double.maxFinite,
                               decoration: BoxDecoration(
                                 color: Colors.yellow,
                                 borderRadius: BorderRadius.circular(30.r),
@@ -91,98 +81,120 @@ class _MainFoodViewState extends State<MainFoodView> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(30.r),
                                 child: Image.network(
-                                  'https://mvs.bslmeiyu.com'
-                                  '/uploads/${recomemdedProduct.img!}',
+                                  'https://mvs.bslmeiyu.com/uploads/${recommendedProduct.img!}',
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: EdgeInsets.all(20.r),
-                          margin: EdgeInsets.only(
-                            left: 10.r,
                           ),
-                          height: 130.h,
-                          width: 250.w,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BigText(text: recomemdedProduct.name.toString()),
-                              Row(
-                                children: [
-                                  ...List.generate(5, (index) {
-                                    return Icon(
-                                      Icons.star,
-                                      color: AppColors.mainColor,
-                                      size: 15,
-                                    );
-                                  }),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  SmallText(
-                                    text: '4.5',
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  SmallText(
-                                    text: '1927',
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                  SizedBox(
-                                    width: 10.w,
-                                  ),
-                                  SmallText(
-                                    text: recomemdedProduct.name.toString(),
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                ],
+                          Positioned(
+                            bottom: 20,
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.all(20.r),
+                                margin: EdgeInsets.only(left: 10.r),
+                                height: 120.h,
+                                width: 250.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    BigText(
+                                        text:
+                                            recommendedProduct.name.toString()),
+                                    Row(
+                                      children: [
+                                        ...List.generate(5, (index) {
+                                          return Icon(
+                                            Icons.star,
+                                            color: AppColors.mainColor,
+                                            size: 15,
+                                          );
+                                        }),
+                                        SizedBox(width: 10.w),
+                                        SmallText(
+                                          text: '4.5',
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w200,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        SmallText(
+                                          text: '1927',
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w200,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        SmallText(
+                                          text: recommendedProduct.name
+                                              .toString(),
+                                          fontSize: 8.sp,
+                                          fontWeight: FontWeight.w200,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconandText(
+                                          icon: Icons.help_rounded,
+                                          text: 'moreeee',
+                                          iconColor: AppColors.yellowColor,
+                                        ),
+                                        IconandText(
+                                          icon: Icons.location_on,
+                                          text: recommendedProduct.location
+                                              .toString(),
+                                          iconColor: AppColors.mainColor,
+                                        ),
+                                        IconandText(
+                                          icon: Icons.access_time_sharp,
+                                          text: 'Time',
+                                          iconColor: AppColors.iconColor1,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconandText(
-                                    icon: Icons.help_rounded,
-                                    text: 'moreeee',
-                                    iconColor: AppColors.yellowColor,
-                                  ),
-                                  IconandText(
-                                    icon: Icons.location_on,
-                                    text: recomemdedProduct.location.toString(),
-                                    iconColor: AppColors.mainColor,
-                                  ),
-                                  IconandText(
-                                    icon: Icons.access_time_sharp,
-                                    text: 'Time',
-                                    iconColor: AppColors.iconColor1,
-                                  ),
-                                ],
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ]),
-                );
-              },
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  // Shimmer Loading Effect
+  Widget _buildShimmerEffect() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: 5, // Number of shimmer placeholders
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.only(left: 10.r),
+            height: 250.h,
+            width: 250.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30.r),
             ),
+          ),
+        );
+      },
     );
   }
 }

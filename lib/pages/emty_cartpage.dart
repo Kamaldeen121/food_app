@@ -39,11 +39,12 @@ class _EmtyCartpageState extends State<EmtyCartpage> {
         children: [
           Image.asset('images/empty carton.jpg'),
           SizedBox(
-            height: 10,
+            height: 10.h,
           ),
           BigText(
             text: 'YOU HAVENT PURCHSASED ANYTHING YET',
             color: AppColors.mainblackColor,
+            fontSize: 13.sp,
           )
         ],
       )),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/app_colors.dart';
+import 'package:food_app/pages/archieved_page.dart';
 import 'package:food_app/pages/cart_history_page.dart';
 import 'package:food_app/pages/cart_page.dart';
 import 'package:food_app/pages/main_food_page.dart';
@@ -17,7 +18,7 @@ class BottomNavbarPage extends StatefulWidget {
 class _MyWidgetState extends State<BottomNavbarPage> {
   List<Widget> pages = [
     MainFoodPage(),
-    SigninPage(),
+    ArchievedPage(),
     CartHistoryPage(),
     ProfilePage()
   ];

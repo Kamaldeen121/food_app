@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/Controllers/recommended_controller.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/models/product_model.dart';
@@ -40,7 +41,7 @@ class MainfoodDetailPageState extends State<MainfoodDetailPage> {
                 fit: BoxFit.cover,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 30).r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -53,20 +54,44 @@ class MainfoodDetailPageState extends State<MainfoodDetailPage> {
                       ),
                     ),
                     GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CartPage()));
-                        },
-                        child: ContainerAndIcon(icon: Icons.shopping_cart)),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CartPage()),
+                        );
+                      },
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          ContainerAndIcon(icon: Icons.shopping_cart),
+                          Positioned(
+                            right: 0,
+                            top: -5,
+                            child: Consumer<PopularController>(
+                              builder: (context, popularController, child) {
+                                int totalItems = popularController.cartCount;
+                                return totalItems > 0
+                                    ? CircleAvatar(
+                                        radius: 10.r,
+                                        backgroundColor: AppColors.mainColor,
+                                        child: SmallText(
+                                          text: '$totalItems',
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : SizedBox();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
               Positioned(
-                bottom: -20, // Adjust the bottom position as needed
-                left: MediaQuery.of(context).size.width / 2 -
-                    240, // Center the container
+                bottom: -20,
+                left: MediaQuery.of(context).size.width / 2 - 240,
                 child: Container(
                   height: 60,
                   width: 480,
@@ -100,17 +125,13 @@ class MainfoodDetailPageState extends State<MainfoodDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     SmallText(
                       text: widget.product.description!,
                       textOverflow: TextOverflow.visible,
                       maxLines: isExpanded ? null : 4,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -129,9 +150,7 @@ class MainfoodDetailPageState extends State<MainfoodDetailPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 200,
-                    ),
+                    SizedBox(height: 200),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -214,6 +233,7 @@ class MainfoodDetailPageState extends State<MainfoodDetailPage> {
               onTap: () {
                 Provider.of<PopularController>(context, listen: false)
                     .addToCart(widget.product, quantity);
+                setState(() {}); // Update the cart count UI
                 Navigator.push(
                   context,
                   MaterialPageRoute(

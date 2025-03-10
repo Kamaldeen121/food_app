@@ -23,10 +23,10 @@ class ProductModel {
 }
 
 class Products {
-  int? id;
+  dynamic id;
   String? name;
   String? description;
-  int? price;
+  dynamic price;
   int? stars;
   String? img;
   String? location;

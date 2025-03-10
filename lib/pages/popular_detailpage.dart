@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_app/app_colors.dart';
 import 'package:food_app/models/product_model.dart';
 import 'package:food_app/pages/cart_page.dart';
@@ -22,7 +23,7 @@ class PopularDetailpage extends StatefulWidget {
 
 class MainfoodDetailPageState extends State<PopularDetailpage> {
   bool isExpanded = false;
-  int quantity = 1;
+  int quantity = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                 fit: BoxFit.cover,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 30).r,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -58,7 +59,31 @@ class MainfoodDetailPageState extends State<PopularDetailpage> {
                               MaterialPageRoute(
                                   builder: (context) => CartPage()));
                         },
-                        child: ContainerAndIcon(icon: Icons.shopping_cart)),
+                        child: Stack(
+                          children: [
+                            ContainerAndIcon(icon: Icons.shopping_cart),
+                            Positioned(
+                              left: 20,
+                              child: Consumer<PopularController>(
+                                builder: (BuildContext context,
+                                    popularController, child) {
+                                  int totalItems = popularController.cartCount;
+
+                                  return totalItems > 0
+                                      ? CircleAvatar(
+                                          radius: 10.r,
+                                          backgroundColor: AppColors.mainColor,
+                                          child: SmallText(
+                                            text: '$totalItems ',
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : SizedBox();
+                                },
+                              ),
+                            )
+                          ],
+                        )),
                   ],
                 ),
               ),

@@ -11,4 +11,9 @@ class SignupServices {
     final payload = newUser.toJson();
     return await apiClient.postData('/api/v1/auth/register', payload);
   }
+
+  Future<Response> fetchUserProfile() async {
+    // Implementation of fetchUserProfile
+    return await apiClient.getData('/user/profile');
+  }
 }
